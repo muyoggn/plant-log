@@ -11,6 +11,7 @@ import { useWeather } from "@/lib/weather";
 import { useWikiSummary } from "@/lib/wiki";
 import { estimate } from "@/lib/watering";
 import { careOf } from "@/lib/care";
+import { lightAdvice, lightAt } from "@/lib/light";
 import { formatJa, today } from "@/lib/date";
 import { MoistureBar } from "@/components/MoistureBar";
 import { DueLabel } from "@/components/DueLabel";
@@ -35,7 +36,8 @@ export default function PlantPage() {
     );
 
   const care = careOf(plant);
-  const est = estimate(plant, care, weather?.days);
+  const light = plant.position ? lightAt(data.room, plant.position) : null;
+  const est = estimate(plant, care, weather?.days, undefined, light?.value);
   const wateredToday = plant.waterings[0] === today();
 
   return (
@@ -87,6 +89,7 @@ export default function PlantPage() {
         <dl className="divide-y divide-line border-y border-line text-sm">
           {[
             ["日当たり", care.light],
+            ...(light ? [["今の置き場所", `${light.label}。${lightAdvice(light.level, care.lightRange).text}`]] : []),
             ["冬の最低温度", `${care.minTemp}℃ 以上`],
             ["水やり間隔", `暖かい時期 約${care.intervalWarm}日 ／ 寒い時期 約${care.intervalCool}日`],
             ["湿度", care.humidity],

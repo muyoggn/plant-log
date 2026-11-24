@@ -15,6 +15,9 @@
   --accent-soft: #dfe9e1;
   --warn: #b5562f; /* 水やりの日を過ぎたとき */
   --water: #3f7fa6; /* 水分ゲージ */
+  --light-2: rgba(240, 196, 90, 0.16); /* 部屋の図：明るい日陰 */
+  --light-3: rgba(240, 180, 60, 0.36); /* 部屋の図：日なた */
+  --furniture: #e7e3d8; /* 部屋の図：家具 */
 }
 
 @media (prefers-color-scheme: dark) {
@@ -29,6 +32,9 @@
     --accent-soft: #233229;
     --warn: #e58a62;
     --water: #78b5da;
+    --light-2: rgba(240, 196, 90, 0.08);
+    --light-3: rgba(240, 180, 60, 0.2);
+    --furniture: #2a2f2a;
   }
 }
 
