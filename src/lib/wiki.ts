@@ -25,6 +25,11 @@ export async function fetchSummary(title: string): Promise<WikiSummary | null> {
     return null;
   }
   const j = await res.json();
+  // 「曖昧さ回避」ページ（同じ名前の記事がいくつもあるときの案内ページ）は説明に使わない
+  if (j.type === "disambiguation") {
+    memo.set(title, null);
+    return null;
+  }
   const s: WikiSummary = {
     title: j.title,
     extract: j.extract ?? "",
