@@ -39,7 +39,7 @@ export default function NewPlant() {
   function submit(e: React.FormEvent) {
     e.preventDefault();
     if (!speciesName) return;
-    const id = addPlant({
+    addPlant({
       nickname: nickname.trim() || speciesName,
       careId: preset?.id,
       speciesName,
@@ -48,7 +48,8 @@ export default function NewPlant() {
       waterings: lastWatered ? [lastWatered] : [],
       notes: notes.trim(),
     });
-    router.push(`/plants/${id}`);
+    // 一覧（部屋の図）に戻る。室内の植物は「部屋に置く」で図に置けます
+    router.push("/");
   }
 
   const field = "w-full rounded-lg border border-line bg-surface px-3 py-2 outline-none focus:border-accent";

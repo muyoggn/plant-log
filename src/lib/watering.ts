@@ -64,7 +64,11 @@ export function estimate(
   care: Care,
   days: DayWeather[] | undefined,
   now = todayKey(),
+  light?: number, // 部屋の中の明るさ（src/lib/light.ts）。部屋に置いていなければ空
 ): Estimate {
+  // 明るい場所ほど土が早く乾く、と考える（暗い場所 ×0.85 〜 窓ぎわ ×1.15）
+  const lightFactor =
+    plant.placement === "indoor" && light !== undefined ? 0.85 + 0.3 * Math.min(1, light) : 1;
   const byDate = new Map((days ?? []).map((d) => [d.date, d]));
   const lastWatered = plant.waterings[0] ?? plant.createdAt;
 
@@ -75,7 +79,7 @@ export function estimate(
     const outHum = w ? w.humidity : climate[month].h;
     // 室内の湿度も、外ほどではないけれど天気につられて上下すると考える
     const hum = plant.placement === "indoor" ? 50 + (outHum - 50) * 0.5 : outHum;
-    const loss = (1 / intervalAt(temp, care)) * humidityFactor(hum);
+    const loss = (1 / intervalAt(temp, care)) * humidityFactor(hum) * lightFactor;
     const rained = plant.placement === "outdoor" && !!w && w.rain >= 5;
     return { date, temp, loss, forecast: date > now, rained, known: !!w };
   };
@@ -117,6 +121,8 @@ export function estimate(
     if (Math.abs(gap) <= 0) reason = `${feel}日が多く、季節どおりのペースです（約${baseInterval}日おき）。`;
     else if (gap < 0) reason = `季節の目安は約${baseInterval}日ですが、気温が高め・空気が乾きぎみなので${-gap}日早めです。`;
     else reason = `季節の目安は約${baseInterval}日ですが、気温が低め・湿度が高めなので${gap}日ゆっくりです。`;
+    if (lightFactor >= 1.08) reason += "窓ぎわの明るい場所なので、少し乾きやすくしています。";
+    if (lightFactor <= 0.92) reason += "部屋の奥の暗めの場所なので、少し乾きにくくしています。";
     if (resetByRain) reason += `（${Number(resetByRain.slice(8))}日の雨で水分が戻ったと考えています）`;
   }
 

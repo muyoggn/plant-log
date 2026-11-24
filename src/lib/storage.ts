@@ -7,11 +7,19 @@
 // 書きかえるだけで済むように、保存まわりの処理をここに集めています。
 // =============================================================
 import { useSyncExternalStore } from "react";
-import type { AppData, Plant } from "./types";
+import type { AppData, Plant, Point, Room } from "./types";
 import { today } from "./date";
 
 const KEY = "plant-log:v1";
-const empty: AppData = { version: 1, plants: [], place: null };
+// はじめて開いたときの部屋：6 畳（360cm × 270cm）、南向きの窓が 1 つ
+export const defaultRoom: Room = {
+  width: 360,
+  depth: 270,
+  topFaces: "北",
+  windows: [{ id: "w1", wall: "bottom", start: 90, length: 180 }],
+  furniture: [],
+};
+const empty: AppData = { version: 1, plants: [], place: null, room: defaultRoom };
 
 let cache: AppData | null = null;
 const listeners = new Set<() => void>();
@@ -91,6 +99,16 @@ export function removeWatering(id: string, day: string) {
   const p = read().plants.find((x) => x.id === id);
   if (!p) return;
   updatePlant(id, { waterings: p.waterings.filter((d) => d !== day) });
+}
+
+export function updateRoom(patch: Partial<Room>) {
+  const d = read();
+  write({ ...d, room: { ...d.room, ...patch } });
+}
+
+// 植物を部屋の中に置く（null で部屋から出す）
+export function movePlant(id: string, position: Point | null) {
+  updatePlant(id, { position: position ?? undefined });
 }
 
 export function setPlace(place: AppData["place"]) {

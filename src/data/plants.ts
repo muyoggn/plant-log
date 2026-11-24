@@ -12,7 +12,9 @@ export type CareProfile = {
   name: string; // 日本語の名前
   scientific: string; // 学名（世界共通の名前）
   wikiTitle: string; // 日本語版 Wikipedia の記事名（説明と写真を取ってくるのに使う）
-  light: string; // 日当たり
+  light: string; // 日当たり（説明文）
+  // 好きな明るさの範囲。1 = 日陰、2 = 明るい日陰、3 = 日なた（部屋の中のどこに置くとよいかの判定に使う）
+  lightRange: [number, number];
   minTemp: number; // 冬に下回らせたくない気温（℃）
   // 水やり間隔の目安（日）。暖かくてよく育つ時期と、寒くて休んでいる時期の 2 つ
   intervalWarm: number; // 気温 25℃ くらいのとき
@@ -28,6 +30,7 @@ export const careProfiles: CareProfile[] = [
     scientific: "Epipremnum aureum",
     wikiTitle: "ポトス",
     light: "明るい日陰〜レースカーテン越しの光",
+    lightRange: [1, 2],
     minTemp: 10,
     intervalWarm: 4,
     intervalCool: 10,
@@ -40,6 +43,7 @@ export const careProfiles: CareProfile[] = [
     scientific: "Monstera deliciosa",
     wikiTitle: "モンステラ",
     light: "明るい日陰。直射日光は葉焼けのもと",
+    lightRange: [2, 2],
     minTemp: 10,
     intervalWarm: 5,
     intervalCool: 12,
@@ -52,6 +56,7 @@ export const careProfiles: CareProfile[] = [
     scientific: "Dracaena trifasciata",
     wikiTitle: "サンスベリア",
     light: "日なた〜明るい日陰",
+    lightRange: [2, 3],
     minTemp: 10,
     intervalWarm: 10,
     intervalCool: 30,
@@ -64,6 +69,7 @@ export const careProfiles: CareProfile[] = [
     scientific: "Pachira glabra",
     wikiTitle: "パキラ属",
     light: "日なた〜明るい日陰",
+    lightRange: [2, 3],
     minTemp: 5,
     intervalWarm: 5,
     intervalCool: 12,
@@ -76,6 +82,7 @@ export const careProfiles: CareProfile[] = [
     scientific: "Ficus microcarpa",
     wikiTitle: "ガジュマル",
     light: "日なたが好き",
+    lightRange: [2, 3],
     minTemp: 5,
     intervalWarm: 4,
     intervalCool: 10,
@@ -88,6 +95,7 @@ export const careProfiles: CareProfile[] = [
     scientific: "Ficus elastica",
     wikiTitle: "インドゴムノキ",
     light: "日なた〜明るい日陰",
+    lightRange: [2, 3],
     minTemp: 5,
     intervalWarm: 5,
     intervalCool: 12,
@@ -100,6 +108,7 @@ export const careProfiles: CareProfile[] = [
     scientific: "Ficus umbellata",
     wikiTitle: "フィカス・ウンベラータ",
     light: "明るい場所",
+    lightRange: [2, 3],
     minTemp: 10,
     intervalWarm: 4,
     intervalCool: 10,
@@ -112,6 +121,7 @@ export const careProfiles: CareProfile[] = [
     scientific: "Dracaena fragrans",
     wikiTitle: "ドラセナ属",
     light: "明るい日陰",
+    lightRange: [1, 2],
     minTemp: 10,
     intervalWarm: 6,
     intervalCool: 14,
@@ -124,6 +134,7 @@ export const careProfiles: CareProfile[] = [
     scientific: "Schefflera arboricola",
     wikiTitle: "シェフレラ",
     light: "日なた〜明るい日陰",
+    lightRange: [2, 3],
     minTemp: 5,
     intervalWarm: 5,
     intervalCool: 12,
@@ -136,6 +147,7 @@ export const careProfiles: CareProfile[] = [
     scientific: "Zamioculcas zamiifolia",
     wikiTitle: "ザミオクルカス",
     light: "明るい日陰。暗めの部屋でも育つ",
+    lightRange: [1, 2],
     minTemp: 10,
     intervalWarm: 10,
     intervalCool: 25,
@@ -148,6 +160,7 @@ export const careProfiles: CareProfile[] = [
     scientific: "Chlorophytum comosum",
     wikiTitle: "オリヅルラン",
     light: "明るい日陰",
+    lightRange: [2, 2],
     minTemp: 5,
     intervalWarm: 4,
     intervalCool: 10,
@@ -160,6 +173,7 @@ export const careProfiles: CareProfile[] = [
     scientific: "Hedera helix",
     wikiTitle: "セイヨウキヅタ",
     light: "日なた〜日陰まで幅広くOK",
+    lightRange: [1, 3],
     minTemp: 0,
     intervalWarm: 4,
     intervalCool: 8,
@@ -172,6 +186,7 @@ export const careProfiles: CareProfile[] = [
     scientific: "Peperomia spp.",
     wikiTitle: "ペペロミア",
     light: "明るい日陰",
+    lightRange: [2, 2],
     minTemp: 10,
     intervalWarm: 7,
     intervalCool: 14,
@@ -184,6 +199,7 @@ export const careProfiles: CareProfile[] = [
     scientific: "Echeveria spp.",
     wikiTitle: "エケベリア属",
     light: "日なたが大好き",
+    lightRange: [3, 3],
     minTemp: 5,
     intervalWarm: 10,
     intervalCool: 25,
@@ -196,6 +212,7 @@ export const careProfiles: CareProfile[] = [
     scientific: "Cactaceae",
     wikiTitle: "サボテン",
     light: "日なたが大好き",
+    lightRange: [3, 3],
     minTemp: 5,
     intervalWarm: 14,
     intervalCool: 40,
@@ -207,6 +224,7 @@ export const careProfiles: CareProfile[] = [
 // 一覧にない植物を登録したとき用の「ふつうの観葉植物」の目安
 export const defaultCare: Omit<CareProfile, "id" | "name" | "scientific" | "wikiTitle"> = {
   light: "明るい日陰（レースカーテン越しの光）",
+  lightRange: [2, 2],
   minTemp: 10,
   intervalWarm: 5,
   intervalCool: 12,
