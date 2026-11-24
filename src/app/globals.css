@@ -1,0 +1,52 @@
+@import "tailwindcss";
+
+/* =============================================================
+   アプリ全体の色。紙のようなあたたかい白に、深い緑を 1 色だけ差し色に使います。
+   色は「変数（--accent など）」にしておくと、あとで一か所直すだけで全体が変わります。
+   ============================================================= */
+:root {
+  color-scheme: light;
+  --background: #f4f2ec;
+  --surface: #fbfaf6;
+  --foreground: #1c1f1b;
+  --muted: #6b7068;
+  --line: #dcd9cf;
+  --accent: #2f6b4f; /* 深い緑 */
+  --accent-soft: #dfe9e1;
+  --warn: #b5562f; /* 水やりの日を過ぎたとき */
+  --water: #3f7fa6; /* 水分ゲージ */
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: dark;
+    --background: #121512;
+    --surface: #1a1e1a;
+    --foreground: #e8eae4;
+    --muted: #949a90;
+    --line: #2c312c;
+    --accent: #7fbf98;
+    --accent-soft: #233229;
+    --warn: #e58a62;
+    --water: #78b5da;
+  }
+}
+
+/* Tailwind で bg-accent、text-muted のように使えるようにする */
+@theme inline {
+  --color-background: var(--background);
+  --color-surface: var(--surface);
+  --color-foreground: var(--foreground);
+  --color-muted: var(--muted);
+  --color-line: var(--line);
+  --color-accent: var(--accent);
+  --color-accent-soft: var(--accent-soft);
+  --color-warn: var(--warn);
+  --color-water: var(--water);
+  --font-sans: var(--font-noto-sans-jp), system-ui, sans-serif;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+}
